@@ -1,6 +1,6 @@
 ---
 title: "Reproduction of Chakraborty 2021: An intracategorical analysis of COVID-19 and people with disabilities"
-author: "Joseph Holler, Junyi Zhou, Peter Kedron, Drew An-Pham, Derrick Burt"
+author: "Joseph Holler, Junyi Zhou, Peter Kedron, Drew An-Pham, Derrick Burt, Tate Sutter"
 date: "`r Sys.Date()`"
 output: pdf_document
 editor_options:
@@ -10,7 +10,7 @@ knit: (function(inputFile, encoding) {
   rmarkdown::render(inputFile, encoding = encoding, output_dir = "../../docs/report") })
 ---
 
-Version 2.0 \| First Created July 7, 2021 \| Updated June 26, 2023
+Version 2.1 \| First Created July 7, 2021 \| Updated September 21, 2023
 
 # Abstract
 
@@ -1875,8 +1875,6 @@ tm_gee_weights
 
 # re
 ```
-
-
 
 ```{r save-figures, eval = F}
 # save figures as image files
