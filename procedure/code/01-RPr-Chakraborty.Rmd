@@ -135,7 +135,7 @@ writeLines(
 knitr::opts_chunk$set(
   echo = FALSE,
   fig.width = 8,
-  fig.path = paste0(here("results", "figures"), "/")
+  fig.path = paste0(herde("results", "figures"), "/")
 )
 ```
 
