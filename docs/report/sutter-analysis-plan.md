@@ -6,7 +6,7 @@ Author: Tate Sutter
 
 1. Improve color scheme of GEE model weights map (lines 1864-1889).
 2. Improve the formatting of the missing data table with Kable and/or KableExtra functions and/or by transposing the table to vertical orientation. (Lines 557-576)
-3. 
+3. Create a function that maps the data.
 Enumerate and justify changes to analytical plan here
 
 ## Results

@@ -370,9 +370,9 @@ missingData %>%
 
 
 # replace NA with 0 for missing data
-#filter(acs_covid, is.na(bpov_pct)) %>% st_drop_geometry() %>% kable()
-#acs_covid[is.na(acs_covid$bpov_pct), ]$bpov_pct <- 0
-#acs_covid[is.na(acs_covid$apov_pct), ]$apov_pct <- 0
+filter(acs_covid, is.na(bpov_pct)) %>% st_drop_geometry() %>% kable()
+acs_covid[is.na(acs_covid$bpov_pct), ]$bpov_pct <- 0
+acs_covid[is.na(acs_covid$apov_pct), ]$apov_pct <- 0
 ```
 
 ## Map COVID-19 incidence
@@ -1861,6 +1861,14 @@ gee_resid <- gee_resid %>%
 
 Map each county's weight in GEE model.
 
+``` {r mapFuctionJ}
+mapData <- mapData(data, title, style, palette) {
+  stylizedMap <- 
+    tm_polygons()
+}
+
+```
+
 ```{r map-weights}
 tm_gee_weights <- tm_shape(gee_resid) +
   tm_polygons("w",
@@ -1975,14 +1983,6 @@ We re-classified the GEE clustering IDs based on state and cluster relative risk
 Upon discovering different results in all of our reproduction GEE models compared to the original study, we added new models to assess the extent to which the different computational environment was causing differences in our results.
 We therefore ran another set of the five GEE models using data provided by the original author, expecting to find identical results.
 
-### Rationale for updated report
-
-This is the second version of our reproduction report.
-The first, registered at <https://doi.org/10.17605/OSF.IO/647EX> on July 22, 2022, represented our best knowledge of the study at that time.
-Subsequently, we improved our approaches to reproduction studies by revising pre-analysis plans and post-analysis reports into legible code RMarkdown documents.
-This change prompted us to re-order some content to flow more linearly with the sequencing required by code, and prompted us to digitize (if necessary) and import results from the original research into Rmarkdown for quantitative comparison to the reproduction study.
-These comparisons led to further insights and research into discrepancies between the original and reproduced Pearsons's correlations between various forms of the Kulldorff spatial scan statistic.
-We also discovered an improved method for comparing the results of generalized linear models by plotting all of the model results on a dot-wisker graph using the dotwhisker package.
 
 # Emily's Discussion
 
@@ -2080,3 +2080,12 @@ In sum, although some of our results differed from Chakraborty's because of diff
 We reiterate Chakraborty's carefully limited interpretation emphasizing county-level relationships and the need for additional data and research, because the estimated relationship at the county level may not hold at the individual level.
 Interpretation of the results were based on aggregate statistics at the county level and on statistical methods which produce approximate estimates, not inferences.
 Further work is needed to reliably infer relationships between minority PwDs and COVID-19 morbidity and mortality, especially at finer geographic scales.
+
+### Rationale for updated report
+
+This is the second version of our reproduction report.
+The first, registered at <https://doi.org/10.17605/OSF.IO/647EX> on July 22, 2022, represented our best knowledge of the study at that time.
+Subsequently, we improved our approaches to reproduction studies by revising pre-analysis plans and post-analysis reports into legible code RMarkdown documents.
+This change prompted us to re-order some content to flow more linearly with the sequencing required by code, and prompted us to digitize (if necessary) and import results from the original research into Rmarkdown for quantitative comparison to the reproduction study.
+These comparisons led to further insights and research into discrepancies between the original and reproduced Pearsons's correlations between various forms of the Kulldorff spatial scan statistic.
+We also discovered an improved method for comparing the results of generalized linear models by plotting all of the model results on a dot-wisker graph using the dotwhisker package.
