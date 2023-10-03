@@ -777,11 +777,53 @@ saveRDS(covid_kulldorff,
 Load pre-calculated Kulldorff spatial scan results.
 Alternatively, skip or modify this code block to use your own version of the SpatialEpi Kulldorff results.
 
-```{r load-Kulldorff}
+```{r load-Kulldorff, eval = FALSE}
 # load pre-calculated Kulldorff results
 # alternatively, modify the file name with an appended date to load a more current set of results
 covid_kulldorff <- readRDS(
   here("data", "derived", "public", "covid_kulldorff.RDS")
+)
+```
+
+**Planned deviation for reproduction**: Here, we vary from the original study design by changing the population threshold within the SpatialEpi-Kulldorff Spatial Scan from 50% to 10%. 
+This should produce more localized COVID-19 clustering results. 
+
+```{r New SpatialEpi-Kulldorff, eval = FALSE, fig.width=4, fig.height=4}
+start_time <- Sys.time()
+covid_geo <- covid_table %>%
+  select(x, y) %>%
+  latlong2grid()
+# latlong2grid creates approximate equidistant cylindrical grid
+# could probably reproject to epsg 5070 and create table with x and y
+
+# calculate expected cases with one strata
+expected.cases <- expected(covid_table$pop, covid_table$cases, 1)
+
+# Kulldorff spatial scan statistic
+covid_kulldorff <- kulldorff(
+  geo = covid_geo,
+  cases = covid_table$cases,
+  population = covid_table$pop,
+  expected.cases = expected.cases,
+  pop.upper.bound = 0.1,                     # Change from 50% of counties to 10%.
+  n.simulations = 999,
+  alpha.level = 0.05,
+  plot = TRUE
+)
+
+print(
+  paste(
+    "Run time:",
+    round(difftime(Sys.time(), start_time, units = "mins"), 2),
+    "minutes"
+  ),
+  quote = FALSE
+)
+rm(covid_geo, expected.cases, start_time)
+
+# save results in a file appended with the current date
+saveRDS(covid_kulldorff,
+  file = here("data", "derived", "public", paste0("covid_kulldorff_", Sys.Date(), ".RDS"))
 )
 ```
 
@@ -852,7 +894,7 @@ acs_covid <- acs_covid[, 1:which(colnames(acs_covid) == "or_incidence")] %>%
 
 **Planned deviation for reproduction**: Map the `SpatialEpi` cluster results.
 
-```{r map-clusters}
+```{r map-clusters, eval = FALSE}
 tm_spatialepi_clusters <-
   tm_shape(state) +
     tm_fill("gray98") +
@@ -861,7 +903,7 @@ tm_spatialepi_clusters <-
           palette = "-Oranges",
           popup.vars = c("fips", "clusterID"),
           colorNA = NULL,
-          title = "SpatialEpi Kulldorff COVID-19 Clusters",
+          title = "SpatialEpi Kulldorff COVID-19 Clusters with 10% Threshold",
           border.col = "white",
           lwd = 0.2,
           border.alpha = 0.2) +
@@ -1861,7 +1903,7 @@ gee_resid <- gee_resid %>%
 
 Map each county's weight in GEE model.
 
-``` {r mapFuctionJ}
+```{r mapFuctionJ}
 mapData <- mapData(data, title, style, palette) {
   stylizedMap <- 
     tm_polygons()
@@ -1982,7 +2024,6 @@ We re-classified the GEE clustering IDs based on state and cluster relative risk
 
 Upon discovering different results in all of our reproduction GEE models compared to the original study, we added new models to assess the extent to which the different computational environment was causing differences in our results.
 We therefore ran another set of the five GEE models using data provided by the original author, expecting to find identical results.
-
 
 # Emily's Discussion
 
