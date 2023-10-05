@@ -1,12 +1,12 @@
-# Planned revisions to reproduction of Social inequities in the distribution of COVID-19 (Chakraborty 2020)
-
+# Planned revisions to reproduction of Social inequities in the distribution of COVID-19 (Chakraborty 2021)
+Author: Tate Sutter
 ## Analysis
 
 1. Improve color scheme of GEE model weights map (lines 1864-1889).
 
 2. Improve the formatting of the missing data table with Kable and/or KableExtra functions and/or by transposing the table to vertical orientation. (Lines 557-576)
 
-3. Decrease the population threshold of the SpatialEpi-Kulldorf Test to 10% of points instead of the original 50%.
+3. Decrease the population threshold of the SpatialEpi-Kulldorf Test to 10% of points instead of the original 50% (Lines 791-821).
 
 ## Results
 

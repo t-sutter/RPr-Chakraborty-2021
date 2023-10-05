@@ -2,15 +2,15 @@
 title: "Reproduction of Chakraborty 2021: An intracategorical analysis of COVID-19 and people with disabilities"
 author: "Joseph Holler, Junyi Zhou, Peter Kedron, Drew An-Pham, Derrick Burt, Tate Sutter"
 date: "`r Sys.Date()`"
-output: pdf_document
+output: html_document
 editor_options:
   markdown:
     wrap: sentence
 knit: (function(inputFile, encoding) {
-  rmarkdown::render(inputFile, encoding = encoding, output_dir = "../../docs/report") })
+  rmarkdown::render(inputFile, encoding = encoding, output_dir = "../../docs") })
 ---
 
-Version 2.1 \| First Created July 7, 2021 \| Updated September 21, 2023
+Version 2.1 \| First Created July 7, 2021 \| Updated October 4, 2023
 
 # Abstract
 
@@ -370,7 +370,7 @@ missingData %>%
 
 
 # replace NA with 0 for missing data
-filter(acs_covid, is.na(bpov_pct)) %>% st_drop_geometry() %>% kable()
+#filter(acs_covid, is.na(bpov_pct)) %>% st_drop_geometry() #%>% kable()
 acs_covid[is.na(acs_covid$bpov_pct), ]$bpov_pct <- 0
 acs_covid[is.na(acs_covid$apov_pct), ]$apov_pct <- 0
 ```
@@ -735,6 +735,10 @@ We expected that this set of software options could reproduce identical results 
 First, calculate the Kulldorff spatial scan statistic using SpatialEpi.
 Optionally, skip this code block due to long run times of more than 10 minutes.
 
+This section is being skipped, so the research design can be readjusted.
+The upper population bounding is changed from 50% to 10% of the total population.
+Ideally, this will produce smaller, more region specific clusters.
+
 ```{r SpatialEpi-Kulldorff, eval = FALSE, fig.width=4, fig.height=4}
 start_time <- Sys.time()
 covid_geo <- covid_table %>%
@@ -785,10 +789,10 @@ covid_kulldorff <- readRDS(
 )
 ```
 
-**Planned deviation for reproduction**: Here, we vary from the original study design by changing the population threshold within the SpatialEpi-Kulldorff Spatial Scan from 50% to 10%. 
-This should produce more localized COVID-19 clustering results. 
+**Planned deviation for reproduction**: Here, we vary from the original study design by changing the upper population bounding limit for cluster creation within the SpatialEpi-Kulldorff Spatial Scan from 50% to 10%.
+This should produce more localized COVID-19 clustering results.
 
-```{r New SpatialEpi-Kulldorff, eval = FALSE, fig.width=4, fig.height=4}
+```{r New SpatialEpi-Kulldorff, eval = TRUE, fig.width=4, fig.height=4}
 start_time <- Sys.time()
 covid_geo <- covid_table %>%
   select(x, y) %>%
@@ -805,7 +809,7 @@ covid_kulldorff <- kulldorff(
   cases = covid_table$cases,
   population = covid_table$pop,
   expected.cases = expected.cases,
-  pop.upper.bound = 0.1,                     # Change from 50% of counties to 10%.
+  pop.upper.bound = 0.1,                     # Change from 50% of population to 10%.
   n.simulations = 999,
   alpha.level = 0.05,
   plot = TRUE
@@ -1049,6 +1053,8 @@ tm_spatialepi_cluster_risk_class
 
 Comparing the cluster and local relative risk classifications for regions like the Southeast, it is apparent that some areas of high risk are represented with large clusters that have an averaging effect on the cluster-based relative risk score.
 This effect is more pronounced for clusters with low compactness (e.g. the Southeast cluster stretched over the "black belt" region from Louisiana and Arkansas to Georgia) than clusters with higher compactness (e.g. New York City) because the circular shape of clusters includes more low-risk counties.
+
+Between the 10% and 50% population threshold / upper populatin bounds renditions of the Kulldorff Spatial Scan, the 10% Scan produces a more compact
 
 ### Compare clusters
 
@@ -1903,14 +1909,6 @@ gee_resid <- gee_resid %>%
 
 Map each county's weight in GEE model.
 
-```{r mapFuctionJ}
-mapData <- mapData(data, title, style, palette) {
-  stylizedMap <- 
-    tm_polygons()
-}
-
-```
-
 ```{r map-weights}
 tm_gee_weights <- tm_shape(gee_resid) +
   tm_polygons("w",
@@ -2025,7 +2023,7 @@ We re-classified the GEE clustering IDs based on state and cluster relative risk
 Upon discovering different results in all of our reproduction GEE models compared to the original study, we added new models to assess the extent to which the different computational environment was causing differences in our results.
 We therefore ran another set of the five GEE models using data provided by the original author, expecting to find identical results.
 
-# Emily's Discussion
+# Discussion
 
 Our reproduction of the original study was partially successful, leading to similar, but inexact results compared to the original study.
 A portion of the inexactitude may be attributed to differences in the computational environments.
@@ -2062,6 +2060,13 @@ Considering that the original motivation for using GEE models was to account for
 Therefore, a cluster-based relative risk classification seemed more appropriate than a local county-based relative risk classification, by applying the same risk level to the entire COVID cluster and allowing the GEE models to analyze variance within the clusters.
 However, many of the most likely clusters extend across multiple states (see Figure 6, especially the southern states from Louisiana to South Carolina).
 This resulted in creation of GEE clusters composed of every county within a state, amounting to 111 unique GEE clusters overall.
+
+We adjusted the upper population bounding threshold in the Kuldorff Spatial Scan from 50% of the entire population to 10% of the entire population.
+For much of the country, the Scan produced similar results.
+The 50% threshold produced a cluster centered in Alabama that stretched from Western Louisiana to South Carolina and from most of Tennessee to Southern Florida.
+The 10% threshold decreased the size of the Southeast cluster to include most of Mississippi, Louisiana, and Alabama.
+Smaller clusters emerge in Georgia and Florida.
+The finer scale of the new clusters grant a greater understanding of COVID-19 clusters.
 
 Our analysis of COVID-19 clusters in the context of controlling for spatial dependence has revealed several challenges and limitations to application of Kulldorff spatial scan statistics across different computational environments.
 These include inconsistent methods for determining secondary clusters, limitation to circular or ellipsoidal cluster shapes, inclusion of single-county clusters, and choosing a method to control for spatial dependence in COVID 19 risk without controlling for too much of the variance in the dependent variable.
