@@ -1054,7 +1054,7 @@ tm_spatialepi_cluster_risk_class
 Comparing the cluster and local relative risk classifications for regions like the Southeast, it is apparent that some areas of high risk are represented with large clusters that have an averaging effect on the cluster-based relative risk score.
 This effect is more pronounced for clusters with low compactness (e.g. the Southeast cluster stretched over the "black belt" region from Louisiana and Arkansas to Georgia) than clusters with higher compactness (e.g. New York City) because the circular shape of clusters includes more low-risk counties.
 
-Between the 10% and 50% population threshold / upper populatin bounds renditions of the Kulldorff Spatial Scan, the 10% Scan produces a more compact
+Between the 10% and 50% population threshold / upper population bounds renditions of the Kulldorff Spatial Scan, the 10% Scan produces a more compact cluster. The smaller threshold directs the Spatial Scan to limit its clustering at 10% of the total contiguous states' population. Considering decreased populations; therefore, fewer counties will produce more localized clusters. Smaller clusters may provide a more targeted result of impacted counties. With more localized clusters, resources can be more efficiently distributed. 
 
 ### Compare clusters
 
@@ -2063,10 +2063,17 @@ This resulted in creation of GEE clusters composed of every county within a stat
 
 We adjusted the upper population bounding threshold in the Kuldorff Spatial Scan from 50% of the entire population to 10% of the entire population.
 For much of the country, the Scan produced similar results.
+Notably, in the Southeast results differed.
 The 50% threshold produced a cluster centered in Alabama that stretched from Western Louisiana to South Carolina and from most of Tennessee to Southern Florida.
 The 10% threshold decreased the size of the Southeast cluster to include most of Mississippi, Louisiana, and Alabama.
 Smaller clusters emerge in Georgia and Florida.
-The finer scale of the new clusters grant a greater understanding of COVID-19 clusters.
+
+The finer scale of the new clusters grant a greater understanding of COVID-19 clusters. 
+With the Southeast divided into numerous clusters, regional variation of COVID-19 impacts become apparent.
+Identifying a region as a cluster is useful since it illustrates that the the region as a whole faces greater challenges than other locations.
+The finer threshold parses the variation within the coarse threshold's broad results. 
+At the 10% threshold, the Southeast has a higher frequency of clusters than other regions of the United States.
+The high prevalence of COVID-19 in the Southeast still appears; however, the clusters' close proximity enable the most impacted communities to be better identified.
 
 Our analysis of COVID-19 clusters in the context of controlling for spatial dependence has revealed several challenges and limitations to application of Kulldorff spatial scan statistics across different computational environments.
 These include inconsistent methods for determining secondary clusters, limitation to circular or ellipsoidal cluster shapes, inclusion of single-county clusters, and choosing a method to control for spatial dependence in COVID 19 risk without controlling for too much of the variance in the dependent variable.
